@@ -1,0 +1,424 @@
+2026-11-18 01:19:06,637 | INFO | OK | 01 Cliente válido | C1: Ana Pérez
+2026-11-18 01:19:06,637 | INFO | FIN | 01 Cliente válido
+2026-11-18 01:19:06,637 | ERROR | ERROR | 02 Correo inválido | Correo electrónico inválido.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 10, in <lambda>
+    ('02 Correo inválido', lambda: sistema.registrar_cliente('C2', 'Luis', 'sin-arroba', '3001234567'), False),  # Rechaza formato incorrecto.
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 44, in registrar_cliente
+    cliente = Cliente(codigo, nombre, correo, telefono)  # Construye y valida antes de insertar.
+  File "/mnt/data/Software_FJ/modelos.py", line 43, in __init__
+    raise DatosInvalidos('Correo electrónico inválido.')  # Evita crear un cliente inconsistente.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: Correo electrónico inválido.
+2026-11-18 01:19:06,638 | INFO | FIN | 02 Correo inválido
+2026-11-18 01:19:06,638 | INFO | OK | 03 Cliente válido | C2: Luis Gómez
+2026-11-18 01:19:06,638 | INFO | FIN | 03 Cliente válido
+2026-11-18 01:19:06,638 | ERROR | ERROR | 04 Cliente duplicado | Código duplicado: C1.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 12, in <lambda>
+    ('04 Cliente duplicado', lambda: sistema.registrar_cliente('C1', 'Otra persona', 'otra@example.com', '3021234567'), False),  # Comprueba código único.
+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 47, in registrar_cliente
+    return self._agregar(self.__clientes, cliente)  # Agrega a la lista de clientes.
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 39, in _agregar
+    raise OperacionNoPermitida(f'Código duplicado: {objeto.codigo}.')  # Impide duplicados.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.OperacionNoPermitida: Código duplicado: C1.
+2026-11-18 01:19:06,638 | INFO | FIN | 04 Cliente duplicado
+2026-11-18 01:19:06,638 | INFO | OK | 05 Sala válida | Sala: S1 - Sala Norte | 50000 COP/h
+2026-11-18 01:19:06,638 | INFO | FIN | 05 Sala válida
+2026-11-18 01:19:06,638 | INFO | OK | 06 Equipo válido | Equipo: S2 - Proyector | 30000 COP/h + 15000 COP
+2026-11-18 01:19:06,638 | INFO | FIN | 06 Equipo válido
+2026-11-18 01:19:06,638 | INFO | OK | 07 Asesoría válida | Asesoría: S3 - Consultoría | 80000 COP/h; 10% desde 4 h
+2026-11-18 01:19:06,638 | INFO | FIN | 07 Asesoría válida
+2026-11-18 01:19:06,638 | ERROR | ERROR | 08 Tarifa negativa | Tarifa debe ser finito y mayor o igual a 0.01.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 16, in <lambda>
+    ('08 Tarifa negativa', lambda: sistema.registrar_servicio(Sala('S4', 'Sala Sur', -1)), False),  # Rechaza tarifa negativa.
+                                                              ~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/modelos.py", line 70, in __init__
+    self.__tarifa = numero(tarifa, 'Tarifa', Decimal('0.01'))  # Exige tarifa estrictamente positiva.
+                    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/modelos.py", line 20, in numero
+    raise DatosInvalidos(f'{campo} debe ser finito y mayor o igual a {minimo}.')  # Explica el límite.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: Tarifa debe ser finito y mayor o igual a 0.01.
+2026-11-18 01:19:06,639 | INFO | FIN | 08 Tarifa negativa
+2026-11-18 01:19:06,639 | ERROR | ERROR | 09 Duración no numérica | Duración debe ser numérico.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/modelos.py", line 16, in numero
+    n = Decimal(str(valor))  # n: número decimal convertido sin redondeo binario.
+decimal.InvalidOperation: [<class 'decimal.ConversionSyntax'>]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 17, in <lambda>
+    ('09 Duración no numérica', lambda: sistema.crear_reserva('R1', 'C1', 'S1', 'dos'), False),  # Demuestra encadenamiento.
+                                        ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 57, in crear_reserva
+    reserva = Reserva(codigo, c, s, duracion)  # Construye una reserva pendiente validada.
+  File "/mnt/data/Software_FJ/modelos.py", line 162, in __init__
+    self.__duracion = servicio.validar_parametros(duracion)  # Valida horas según el tipo de servicio.
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/mnt/data/Software_FJ/modelos.py", line 121, in validar_parametros
+    return self._validar_horas(duracion, 12)  # Regla simulada: máximo 12 horas.
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/modelos.py", line 113, in _validar_horas
+    horas = numero(duracion, 'Duración', 1)  # Exige una duración mínima de una hora.
+            ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/modelos.py", line 18, in numero
+    raise DatosInvalidos(f'{campo} debe ser numérico.') from error  # Conserva la causa original.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: Duración debe ser numérico.
+2026-11-18 01:19:06,639 | INFO | FIN | 09 Duración no numérica
+2026-11-18 01:19:06,639 | INFO | OK | 10 Reserva de sala | R1 | C1 | S1 | 2 h | PENDIENTE | total: None
+2026-11-18 01:19:06,639 | INFO | FIN | 10 Reserva de sala
+2026-11-18 01:19:06,640 | INFO | OK | 11 Confirmar sala | 107100.00
+2026-11-18 01:19:06,640 | INFO | FIN | 11 Confirmar sala
+2026-11-18 01:19:06,640 | INFO | OK | 12 Reserva competidora | R2 | C2 | S1 | 1 h | PENDIENTE | total: None
+2026-11-18 01:19:06,640 | INFO | FIN | 12 Reserva competidora
+2026-11-18 01:19:06,640 | ERROR | ERROR | 13 Confirmación ocupada | Servicio ocupado por otra reserva confirmada.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 21, in <lambda>
+    ('13 Confirmación ocupada', lambda: sistema.confirmar_reserva('R2'), False),  # Bloquea doble ocupación.
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 63, in confirmar_reserva
+    raise OperacionNoPermitida('Servicio ocupado por otra reserva confirmada.')  # Modelo sin calendario: una confirmación activa por servicio.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.OperacionNoPermitida: Servicio ocupado por otra reserva confirmada.
+2026-11-18 01:19:06,640 | INFO | FIN | 13 Confirmación ocupada
+2026-11-18 01:19:06,640 | INFO | OK | 14 Cancelar sala | R1 | C1 | S1 | 2 h | CANCELADA | total: 107100.00
+2026-11-18 01:19:06,640 | INFO | FIN | 14 Cancelar sala
+2026-11-18 01:19:06,640 | INFO | OK | 15 Confirmar tras cancelar | 50000.00
+2026-11-18 01:19:06,640 | INFO | FIN | 15 Confirmar tras cancelar
+2026-11-18 01:19:06,640 | ERROR | ERROR | 16 Cancelación repetida | La reserva ya está cancelada.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 24, in <lambda>
+    ('16 Cancelación repetida', lambda: sistema.cancelar_reserva('R1'), False),  # Impide transición inválida.
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 68, in cancelar_reserva
+    reserva.cancelar()  # Ejecuta la transición protegida.
+    ~~~~~~~~~~~~~~~~^^
+  File "/mnt/data/Software_FJ/modelos.py", line 193, in cancelar
+    raise OperacionNoPermitida('La reserva ya está cancelada.')  # Conserva el estado actual.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.OperacionNoPermitida: La reserva ya está cancelada.
+2026-11-18 01:19:06,640 | INFO | FIN | 16 Cancelación repetida
+2026-11-18 01:19:06,640 | INFO | OK | 17 Desactivar equipo | Equipo: S2 - Proyector | 30000 COP/h + 15000 COP
+2026-11-18 01:19:06,640 | INFO | FIN | 17 Desactivar equipo
+2026-11-18 01:19:06,640 | ERROR | ERROR | 18 Equipo no disponible | Servicio no disponible.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 26, in <lambda>
+    ('18 Equipo no disponible', lambda: sistema.crear_reserva('R3', 'C1', 'S2', 3), False),  # Impide reserva desactivada.
+                                        ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 57, in crear_reserva
+    reserva = Reserva(codigo, c, s, duracion)  # Construye una reserva pendiente validada.
+  File "/mnt/data/Software_FJ/modelos.py", line 159, in __init__
+    raise OperacionNoPermitida('Servicio no disponible.')  # Evita una reserva inválida.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.OperacionNoPermitida: Servicio no disponible.
+2026-11-18 01:19:06,641 | INFO | FIN | 18 Equipo no disponible
+2026-11-18 01:19:06,641 | INFO | OK | 19 Activar equipo | Equipo: S2 - Proyector | 30000 COP/h + 15000 COP
+2026-11-18 01:19:06,641 | INFO | FIN | 19 Activar equipo
+2026-11-18 01:19:06,641 | INFO | OK | 20 Reserva de equipo | R3 | C1 | S2 | 3 h | PENDIENTE | total: None
+2026-11-18 01:19:06,641 | INFO | FIN | 20 Reserva de equipo
+2026-11-18 01:19:06,641 | INFO | OK | 21 Confirmar equipo | 105000.00
+2026-11-18 01:19:06,641 | INFO | FIN | 21 Confirmar equipo
+2026-11-18 01:19:06,641 | INFO | OK | 22 Reserva asesoría | R4 | C2 | S3 | 4 h | PENDIENTE | total: None
+2026-11-18 01:19:06,641 | INFO | FIN | 22 Reserva asesoría
+2026-11-18 01:19:06,641 | ERROR | ERROR | 23 Descuento inválido | Los porcentajes no pueden superar 100.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 31, in <lambda>
+    ('23 Descuento inválido', lambda: sistema.confirmar_reserva('R4', descuento=110), False),  # No modifica el estado pendiente.
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 64, in confirmar_reserva
+    return reserva.confirmar(impuesto, descuento)  # Confirma después de verificar ocupación.
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/modelos.py", line 186, in confirmar
+    importe = self.procesar(impuesto, descuento)  # Si falla, no cambia estado ni total.
+  File "/mnt/data/Software_FJ/modelos.py", line 183, in procesar
+    return self.servicio.calcular_costo(self.__duracion, impuesto, descuento)  # Usa despacho polimórfico.
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/modelos.py", line 104, in calcular_costo
+    raise CalculoInvalido('Los porcentajes no pueden superar 100.')  # Evita importes inconsistentes.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.CalculoInvalido: Los porcentajes no pueden superar 100.
+2026-11-18 01:19:06,641 | INFO | FIN | 23 Descuento inválido
+2026-11-18 01:19:06,641 | INFO | OK | 24 Confirmar asesoría | 342720.00
+2026-11-18 01:19:06,641 | INFO | FIN | 24 Confirmar asesoría
+2026-11-18 01:19:06,641 | ERROR | ERROR | 25 Cliente inexistente | No existe el código C9.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 33, in <lambda>
+    ('25 Cliente inexistente', lambda: sistema.crear_reserva('R5', 'C9', 'S1', 1), False),  # Verifica referencias.
+                                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 55, in crear_reserva
+    c = self._buscar(self.__clientes, cliente)  # c: objeto Cliente encontrado.
+  File "/mnt/data/Software_FJ/sistema.py", line 35, in _buscar
+    raise DatosInvalidos(f'No existe el código {codigo}.')  # Informa que faltan datos registrados.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: No existe el código C9.
+2026-11-18 01:19:06,642 | INFO | FIN | 25 Cliente inexistente
+2026-11-18 01:19:06,642 | ERROR | INESPERADO | 26 Parámetro faltante
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 34, in <lambda>
+    ('26 Parámetro faltante', lambda: sistema.registrar_cliente('C3', 'Eva', 'eva@example.com'), False),  # Captura TypeError inesperado.
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Sistema.registrar_cliente() missing 1 required positional argument: 'telefono'
+2026-11-18 01:19:06,642 | INFO | FIN | 26 Parámetro faltante
+2026-11-18 01:19:06,642 | ERROR | ERROR | 27 Duración fuera del límite | Duración máxima: 8 horas.
+Traceback (most recent call last):
+  File "/mnt/data/Software_FJ/sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "/mnt/data/Software_FJ/main.py", line 35, in <lambda>
+    ('27 Duración fuera del límite', lambda: sistema.crear_reserva('R5', 'C1', 'S3', 9), False),  # Valida límite específico.
+                                             ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/sistema.py", line 57, in crear_reserva
+    reserva = Reserva(codigo, c, s, duracion)  # Construye una reserva pendiente validada.
+  File "/mnt/data/Software_FJ/modelos.py", line 162, in __init__
+    self.__duracion = servicio.validar_parametros(duracion)  # Valida horas según el tipo de servicio.
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "/mnt/data/Software_FJ/modelos.py", line 143, in validar_parametros
+    return self._validar_horas(duracion, 8)  # Regla simulada: máximo 8 horas.
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "/mnt/data/Software_FJ/modelos.py", line 115, in _validar_horas
+    raise DatosInvalidos(f'Duración máxima: {limite} horas.')  # Impide reservas fuera del rango.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: Duración máxima: 8 horas.
+2026-11-18 01:19:06,642 | INFO | FIN | 27 Duración fuera del límite
+2026-11-18 01:19:06,642 | INFO | OK | 28 Reserva posterior al error | R5 | C1 | S3 | 1 h | PENDIENTE | total: None
+2026-11-18 01:19:06,642 | INFO | FIN | 28 Reserva posterior al error
+2026-11-17 20:30:10,517 | INFO | OK | 01 Cliente válido | C1: Ana Pérez
+2026-11-17 20:30:10,518 | INFO | FIN | 01 Cliente válido
+2026-11-17 20:30:10,518 | ERROR | ERROR | 02 Correo inválido | Correo electrónico inválido.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 10, in <lambda>
+    ('02 Correo inválido', lambda: sistema.registrar_cliente('C2', 'Luis', 'sin-arroba', '3001234567'), False),  # Rechaza formato incorrecto.
+                                   ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 44, in registrar_cliente
+    cliente = Cliente(codigo, nombre, correo, telefono)  # Construye y valida antes de insertar.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 43, in __init__
+    raise DatosInvalidos('Correo electrónico inválido.')  # Evita crear un cliente inconsistente.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: Correo electrónico inválido.
+2026-11-17 20:30:10,611 | INFO | FIN | 02 Correo inválido
+2026-11-17 20:30:10,611 | INFO | OK | 03 Cliente válido | C2: Luis Gómez
+2026-11-17 20:30:10,611 | INFO | FIN | 03 Cliente válido
+2026-11-17 20:30:10,612 | ERROR | ERROR | 04 Cliente duplicado | Código duplicado: C1.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 12, in <lambda>
+    ('04 Cliente duplicado', lambda: sistema.registrar_cliente('C1', 'Otra persona', 'otra@example.com', '3021234567'), False),  # Comprueba código único.
+                                     ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 47, in registrar_cliente
+    return self._agregar(self.__clientes, cliente)  # Agrega a la lista de clientes.
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 39, in _agregar
+    raise OperacionNoPermitida(f'Código duplicado: {objeto.codigo}.')  # Impide duplicados.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.OperacionNoPermitida: Código duplicado: C1.
+2026-11-17 20:30:10,614 | INFO | FIN | 04 Cliente duplicado
+2026-11-17 20:30:10,618 | INFO | OK | 05 Sala válida | Sala: S1 - Sala Norte | 50000 COP/h
+2026-11-17 20:30:10,619 | INFO | FIN | 05 Sala válida
+2026-11-17 20:30:10,619 | INFO | OK | 06 Equipo válido | Equipo: S2 - Proyector | 30000 COP/h + 15000 COP
+2026-11-17 20:30:10,619 | INFO | FIN | 06 Equipo válido
+2026-11-17 20:30:10,619 | INFO | OK | 07 Asesoría válida | Asesoría: S3 - Consultoría | 80000 COP/h; 10% desde 4 h
+2026-11-17 20:30:10,619 | INFO | FIN | 07 Asesoría válida
+2026-11-17 20:30:10,620 | ERROR | ERROR | 08 Tarifa negativa | Tarifa debe ser finito y mayor o igual a 0.01.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 16, in <lambda>
+    ('08 Tarifa negativa', lambda: sistema.registrar_servicio(Sala('S4', 'Sala Sur', -1)), False),  # Rechaza tarifa negativa.
+                                                              ~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 70, in __init__
+    self.__tarifa = numero(tarifa, 'Tarifa', Decimal('0.01'))  # Exige tarifa estrictamente positiva.
+                    ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 20, in numero
+    raise DatosInvalidos(f'{campo} debe ser finito y mayor o igual a {minimo}.')  # Explica el límite.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: Tarifa debe ser finito y mayor o igual a 0.01.
+2026-11-17 20:30:10,622 | INFO | FIN | 08 Tarifa negativa
+2026-11-17 20:30:10,622 | ERROR | ERROR | 09 Duración no numérica | Duración debe ser numérico.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 16, in numero
+    n = Decimal(str(valor))  # n: número decimal convertido sin redondeo binario.
+decimal.InvalidOperation: [<class 'decimal.ConversionSyntax'>]
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 17, in <lambda>
+    ('09 Duración no numérica', lambda: sistema.crear_reserva('R1', 'C1', 'S1', 'dos'), False),  # Demuestra encadenamiento.
+                                        ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 57, in crear_reserva
+    reserva = Reserva(codigo, c, s, duracion)  # Construye una reserva pendiente validada.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 162, in __init__
+    self.__duracion = servicio.validar_parametros(duracion)  # Valida horas según el tipo de servicio.
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 121, in validar_parametros
+    return self._validar_horas(duracion, 12)  # Regla simulada: máximo 12 horas.
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 113, in _validar_horas
+    horas = numero(duracion, 'Duración', 1)  # Exige una duración mínima de una hora.
+            ~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 18, in numero
+    raise DatosInvalidos(f'{campo} debe ser numérico.') from error  # Conserva la causa original.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: Duración debe ser numérico.
+2026-11-17 20:30:10,624 | INFO | FIN | 09 Duración no numérica
+2026-11-17 20:30:10,625 | INFO | OK | 10 Reserva de sala | R1 | C1 | S1 | 2 h | PENDIENTE | total: None
+2026-11-17 20:30:10,625 | INFO | FIN | 10 Reserva de sala
+2026-11-17 20:30:10,625 | INFO | OK | 11 Confirmar sala | 107100.00
+2026-11-17 20:30:10,626 | INFO | FIN | 11 Confirmar sala
+2026-11-17 20:30:10,626 | INFO | OK | 12 Reserva competidora | R2 | C2 | S1 | 1 h | PENDIENTE | total: None
+2026-11-17 20:30:10,626 | INFO | FIN | 12 Reserva competidora
+2026-11-17 20:30:10,627 | ERROR | ERROR | 13 Confirmación ocupada | Servicio ocupado por otra reserva confirmada.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 21, in <lambda>
+    ('13 Confirmación ocupada', lambda: sistema.confirmar_reserva('R2'), False),  # Bloquea doble ocupación.
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 63, in confirmar_reserva
+    raise OperacionNoPermitida('Servicio ocupado por otra reserva confirmada.')  # Modelo sin calendario: una confirmación activa por servicio.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.OperacionNoPermitida: Servicio ocupado por otra reserva confirmada.
+2026-11-17 20:30:10,628 | INFO | FIN | 13 Confirmación ocupada
+2026-11-17 20:30:10,628 | INFO | OK | 14 Cancelar sala | R1 | C1 | S1 | 2 h | CANCELADA | total: 107100.00
+2026-11-17 20:30:10,628 | INFO | FIN | 14 Cancelar sala
+2026-11-17 20:30:10,629 | INFO | OK | 15 Confirmar tras cancelar | 50000.00
+2026-11-17 20:30:10,629 | INFO | FIN | 15 Confirmar tras cancelar
+2026-11-17 20:30:10,629 | ERROR | ERROR | 16 Cancelación repetida | La reserva ya está cancelada.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 24, in <lambda>
+    ('16 Cancelación repetida', lambda: sistema.cancelar_reserva('R1'), False),  # Impide transición inválida.
+                                        ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 68, in cancelar_reserva
+    reserva.cancelar()  # Ejecuta la transición protegida.
+    ~~~~~~~~~~~~~~~~^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 193, in cancelar
+    raise OperacionNoPermitida('La reserva ya está cancelada.')  # Conserva el estado actual.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.OperacionNoPermitida: La reserva ya está cancelada.
+2026-11-17 20:30:10,630 | INFO | FIN | 16 Cancelación repetida
+2026-11-17 20:30:10,630 | INFO | OK | 17 Desactivar equipo | Equipo: S2 - Proyector | 30000 COP/h + 15000 COP
+2026-11-17 20:30:10,630 | INFO | FIN | 17 Desactivar equipo
+2026-11-17 20:30:10,631 | ERROR | ERROR | 18 Equipo no disponible | Servicio no disponible.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 26, in <lambda>
+    ('18 Equipo no disponible', lambda: sistema.crear_reserva('R3', 'C1', 'S2', 3), False),  # Impide reserva desactivada.
+                                        ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 57, in crear_reserva
+    reserva = Reserva(codigo, c, s, duracion)  # Construye una reserva pendiente validada.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 159, in __init__
+    raise OperacionNoPermitida('Servicio no disponible.')  # Evita una reserva inválida.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.OperacionNoPermitida: Servicio no disponible.
+2026-11-17 20:30:10,632 | INFO | FIN | 18 Equipo no disponible
+2026-11-17 20:30:10,633 | INFO | OK | 19 Activar equipo | Equipo: S2 - Proyector | 30000 COP/h + 15000 COP
+2026-11-17 20:30:10,633 | INFO | FIN | 19 Activar equipo
+2026-11-17 20:30:10,635 | INFO | OK | 20 Reserva de equipo | R3 | C1 | S2 | 3 h | PENDIENTE | total: None
+2026-11-17 20:30:10,635 | INFO | FIN | 20 Reserva de equipo
+2026-11-17 20:30:10,635 | INFO | OK | 21 Confirmar equipo | 105000.00
+2026-11-17 20:30:10,636 | INFO | FIN | 21 Confirmar equipo
+2026-11-17 20:30:10,637 | INFO | OK | 22 Reserva asesoría | R4 | C2 | S3 | 4 h | PENDIENTE | total: None
+2026-11-17 20:30:10,637 | INFO | FIN | 22 Reserva asesoría
+2026-11-17 20:30:10,638 | ERROR | ERROR | 23 Descuento inválido | Los porcentajes no pueden superar 100.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 31, in <lambda>
+    ('23 Descuento inválido', lambda: sistema.confirmar_reserva('R4', descuento=110), False),  # No modifica el estado pendiente.
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 64, in confirmar_reserva
+    return reserva.confirmar(impuesto, descuento)  # Confirma después de verificar ocupación.
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 186, in confirmar
+    importe = self.procesar(impuesto, descuento)  # Si falla, no cambia estado ni total.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 183, in procesar
+    return self.servicio.calcular_costo(self.__duracion, impuesto, descuento)  # Usa despacho polimórfico.
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 104, in calcular_costo
+    raise CalculoInvalido('Los porcentajes no pueden superar 100.')  # Evita importes inconsistentes.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.CalculoInvalido: Los porcentajes no pueden superar 100.
+2026-11-17 20:30:10,640 | INFO | FIN | 23 Descuento inválido
+2026-11-17 20:30:10,640 | INFO | OK | 24 Confirmar asesoría | 342720.00
+2026-11-17 20:30:10,641 | INFO | FIN | 24 Confirmar asesoría
+2026-11-17 20:30:10,642 | ERROR | ERROR | 25 Cliente inexistente | No existe el código C9.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 33, in <lambda>
+    ('25 Cliente inexistente', lambda: sistema.crear_reserva('R5', 'C9', 'S1', 1), False),  # Verifica referencias.
+                                       ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 55, in crear_reserva
+    c = self._buscar(self.__clientes, cliente)  # c: objeto Cliente encontrado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 35, in _buscar
+    raise DatosInvalidos(f'No existe el código {codigo}.')  # Informa que faltan datos registrados.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: No existe el código C9.
+2026-11-17 20:30:10,646 | INFO | FIN | 25 Cliente inexistente
+2026-11-17 20:30:10,647 | ERROR | INESPERADO | 26 Parámetro faltante
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 34, in <lambda>
+    ('26 Parámetro faltante', lambda: sistema.registrar_cliente('C3', 'Eva', 'eva@example.com'), False),  # Captura TypeError inesperado.
+                                      ~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: Sistema.registrar_cliente() missing 1 required positional argument: 'telefono'
+2026-11-17 20:30:10,649 | INFO | FIN | 26 Parámetro faltante
+2026-11-17 20:30:10,649 | ERROR | ERROR | 27 Duración fuera del límite | Duración máxima: 8 horas.
+Traceback (most recent call last):
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 84, in ejecutar
+    resultado = accion()  # Ejecuta el registro, reserva o cálculo solicitado.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\main.py", line 35, in <lambda>
+    ('27 Duración fuera del límite', lambda: sistema.crear_reserva('R5', 'C1', 'S3', 9), False),  # Valida límite específico.
+                                             ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\sistema.py", line 57, in crear_reserva
+    reserva = Reserva(codigo, c, s, duracion)  # Construye una reserva pendiente validada.
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 162, in __init__
+    self.__duracion = servicio.validar_parametros(duracion)  # Valida horas según el tipo de servicio.
+                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 143, in validar_parametros
+    return self._validar_horas(duracion, 8)  # Regla simulada: máximo 8 horas.
+           ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^
+  File "c:\UNAD\Programación\Actividad4\Software_FJ\modelos.py", line 115, in _validar_horas
+    raise DatosInvalidos(f'Duración máxima: {limite} horas.')  # Impide reservas fuera del rango.
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+excepciones.DatosInvalidos: Duración máxima: 8 horas.
+2026-11-17 20:30:10,662 | INFO | FIN | 27 Duración fuera del límite
+2026-11-17 20:30:10,662 | INFO | OK | 28 Reserva posterior al error | R5 | C1 | S3 | 1 h | PENDIENTE | total: None
+2026-11-17 20:30:10,663 | INFO | FIN | 28 Reserva posterior al error
